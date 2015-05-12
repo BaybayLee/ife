@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>任务管理系统</title>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/util.js"></script>
+    <script src="js/yan_task03.js"></script>
+</head>
+<body>
+<header>
+    <h1>GTD Tools</h1>
+</header>
+<main>
+    <aside class="classify">
+        <h4>所有任务 (<span>11</span>) </h4>
+        <h4>分类列表</h4>
+        <div class="sumList">
+			<div class="taskName"> 
+				<span>默认分类</span>
+            	<span class="deleteTask"></span>
+			</div>
+        </div>
+		<div class="sumList">
+			<div class="taskName">
+				<span>默认分类</span>
+            	<span class="deleteTask"></span>
+			</div>
+			<ul class="subTask">
+				<li> <span>任务一</span></li>
+				<li><span>任务二</span></li>
+				<li><span>任务三</span></li>
+			</ul>
+        </div>
+        <div class="increaseBtn" id="createClassification"><span class="increaseSym">+</span>新增分类</div>
+    </aside>
+    <aside class="task">
+       <nav class="taskTitle">
+           <span>所有</span>
+           <span>已完成</span>
+           <span>未完成</span>
+       </nav>
+        <div class="taskFinish">
+            <p class="time">2015-05-10</p>
+            <p class="content"><span>to-do1</span></p>
+            <p class="time">2015-05-11</p>
+            <p class="content"><span>to-do2</span></p>
+            <p class="content"><span>to-do3</span></p>
+            <p class="content"><span>to-do3</span></p>
+            <p class="content"><span>to-do3</span></p>
+
+        </div>
+        <div class="increaseBtn"><span class="increaseSym">+</span>新增任务</div>
+
+    </aside>
+    <article class="detail">
+        <nav class="detailTitle">
+            <span>to-do5</span>
+            <img src="img/finishIcon.png" alt="完成" class="finished"/>
+            <img src="img/editIcon.png" alt="编辑" class="edit" />        </nav>
+        <p class="time">任务日期: <span>2015-10-09</span></p>
+        <div class="taskDetail">赶工干了好几天，连续熬了三天的夜，平均每天睡眠5小时不到，也算是有了个交代。能做出来非常开心，即使已经这么晚了。大体都实现了，自己测试依然有若干可以在交互上优化的地方吧。依然感谢百度提供的这次机会：）</div>
+    </article>
+
+</main>
+</body>
+
+</html>

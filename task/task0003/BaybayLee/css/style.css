@@ -1,0 +1,162 @@
+body{
+    font-family:"Microsoft YaHei";
+    color: #333;
+    min-width: 900px;
+}
+header{
+    background:#ddd;
+    width: 100%;
+    color: #404344;
+    height:60px;
+    box-shadow: 0 0 4px rgba(0,0,0,.5);
+}
+header h1{
+    font-size: 24px;
+    line-height: 60px;
+    margin-left: 100px;
+    font-weight:  bold;
+}
+main{
+    display: table;
+    width: 100%;
+    min-width: 900px;
+}
+aside, article{
+    position: absolute;
+    top: 62px;
+    bottom: 0;
+    box-shadow: 0 0 1px rgba(0,0,0,.5);
+    overflow-x: hidden;
+}
+.classify{
+    width: 217px;
+    background:#f2f2f2;
+    padding-left:10px;
+    padding-top: 25px; ;
+}
+.task{
+    width:230px;
+    left: 228px;
+}
+.detail{
+    left:458px;
+    right: 0;
+}
+.classify h4 ,.sumList{
+    margin-bottom: 20px;
+}
+.sumList{
+    width: 100%;
+    cursor: pointer;      
+}
+.sumList .deleteTask{
+    width: 12px;
+    height: 12px;
+    background: url("../img/delete.png")no-repeat top;
+    right: 22px;
+    position: absolute;
+    display: none;
+}
+.sumList:hover .deleteTask{
+    display: inline-block;
+}
+.taskName{
+	background: url("../img/folderIcon.png")no-repeat left center; 
+	padding-left: 22px;
+}
+.subTask li span{
+	line-height:20px;
+	list-style:none;
+	background:url(../img/textIcon.png) no-repeat left center;
+	padding-left:20px;
+	margin-left:20px;
+	margin-top:3px;
+}
+.subTask li:hover{
+    background: #fafaee;
+}
+.increaseBtn{
+    background: #eee;
+    cursor: pointer;
+    height: 40px;
+    line-height: 40px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-left: -10px;
+    padding-left: 20px;
+    border-top: 1px solid #cdcdcd;
+}
+.increaseSym{
+    font-size: 25px;
+    font-weight: bolder;
+    padding-right: 5px;
+}
+.taskTitle{
+    background: #eee;
+    border-bottom: 1px solid #cdcdcd;
+}
+.taskTitle span{
+    margin: 7px;
+    padding: 8px;
+    display: inline-block;
+}
+.taskTitle span:hover{
+    background:#fff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.taskFinish .time {
+    padding: 10px 15px;
+}
+.taskFinish .content{
+    line-height: 20px;
+    padding: 5px 0;
+    cursor: pointer;
+    width: 100%;
+}
+.content span{
+    padding-left: 40px;
+}
+
+.taskFinish .content:hover{
+    color: green;
+    background:#f2f2f2;
+}
+.detail{
+    min-width: 600px;
+}
+.detail .detailTitle{
+    background:#f2f2f2 ;
+    height: 50px;
+    font-size: 20px;
+    line-height: 50px;
+    padding-left: 30px;
+    position: relative;
+}
+.detailTitle img{
+    float: right;
+    top: 10px;
+    cursor: pointer;
+    margin-right: 30px;
+    margin-top:10px ;
+}
+/*.detailTitle .finished{*/
+    /*left: 400px;*/
+/*}*/
+/*.detailTitle .edit{*/
+    /*left: 450px;*/
+/*}*/
+.detail .time{
+    height:60px;
+    background:#fafaee;
+    line-height: 60px;
+    padding-left: 30px;
+
+}
+.taskDetail{
+    border-top: 1px solid #cdcdcd;
+    padding: 30px;
+    line-height: 20px;
+}
