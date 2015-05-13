@@ -99,7 +99,15 @@ function isMobilePhone(phone) {
 }
 
 function hasClass(element, cls) {
-    return element.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+//    return element.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+    var classNames = element.className.split(/\s+/);
+    for(var i = 0; i < classNames.length; i++){
+        if(classNames[i] == cls){
+            return true;
+        }
+    }
+
+    return false;
 }
 // 为element增加一个样式名为newClassName的新样式
 function addClass(element, newClassName) {

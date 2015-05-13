@@ -31,7 +31,6 @@ aside, article{
 .classify{
     width: 217px;
     background:#f2f2f2;
-    padding-left:10px;
     padding-top: 25px; ;
 }
 .task{
@@ -42,36 +41,58 @@ aside, article{
     left:458px;
     right: 0;
 }
-.classify h4 ,.sumList{
+.classify h4 {
+    padding-left: 20px;
     margin-bottom: 20px;
 }
 .sumList{
+    margin-bottom: 10px;
     width: 100%;
     cursor: pointer;      
 }
 .sumList .deleteTask{
     width: 12px;
     height: 12px;
-    background: url("../img/delete.png")no-repeat top;
     right: 22px;
     position: absolute;
+    top: 7px;
     display: none;
 }
-.sumList:hover .deleteTask{
+.taskName.taskName:hover .deleteTask, .subTask li:hover .deleteTask{
     display: inline-block;
 }
 .taskName{
-	background: url("../img/folderIcon.png")no-repeat left center; 
-	padding-left: 22px;
+    position: relative;
+    line-height: 30px;
+	padding-left:30px;
 }
-.subTask li span{
-	line-height:20px;
+.taskName i{
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 18px;
+    height: 12px;
+    background: url("../img/folderIcon.png")no-repeat left center;
+}
+.subTask li{
+    position: relative;
+}
+.subTask li {
+	line-height:25px;
 	list-style:none;
-	background:url(../img/textIcon.png) no-repeat left center;
-	padding-left:20px;
-	margin-left:20px;
+	padding-left:40px;
 	margin-top:3px;
 }
+.subTask i{
+    display: inline-block;
+    width: 12px;
+    height: 24px;
+    background:url(../img/textIcon.png) no-repeat left center;
+    position: absolute;
+    left: 25px;
+}
+
 .subTask li:hover{
     background: #fafaee;
 }
@@ -159,4 +180,7 @@ aside, article{
     border-top: 1px solid #cdcdcd;
     padding: 30px;
     line-height: 20px;
+}
+.classActive{
+    background: #fafaee;
 }
