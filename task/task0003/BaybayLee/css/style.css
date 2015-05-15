@@ -120,30 +120,35 @@ aside, article{
     padding: 8px;
     display: inline-block;
 }
-.taskTitle span:hover{
+.taskTitle span:hover, .taskTitleActive{
     background:#fff;
     cursor: pointer;
     border-radius: 5px;
 }
-
-.taskFinish .time {
+#allTask .time, #taskFinished .time, #taskUndo .time {
     padding: 10px 15px;
 }
-.taskFinish .content{
+#allTask .content ,#taskFinished .content,#taskUndo .content {
     line-height: 20px;
     padding: 2px 0 0 40px;
     text-overflow: ellipsis;
     word-break: break-all;
     cursor: pointer;
-    width: 69%;
+    width: 100%;
     overflow: hidden;
     height: 20px;
+}
+#taskFinished,#taskUndo{
+    display: none;
+}
+.task .none{
+    display: none;
 }
 .content span{
     padding-left: 40px;
 }
 
-.taskFinish .content:hover{
+#allTask .content:hover, #taskFinished .content:hover ,#taskUndo .content:hover,.taskActive{
     color: green;
     background:#f2f2f2;
 }

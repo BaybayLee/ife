@@ -1,14 +1,14 @@
 /**
  * Created by liyan on 2015/5/12.
  */
+
 window.onload = function () {
+
     showClass();//将本地存储的数据显示出来
     $("#createClassification").onclick = createClass;
-//    delegateEvent("#classContainer", "span", "click", deleteClass);
     delegateEvent("#classContainer", "img", "click", deleteClass);
     delegateEvent("#classContainer", "p", "click", clickClass);
-
-
+    tab();
 };
 function newClass(id, name) {//每个大的类别都有ID号，name也就是存储的名字，以及子类别
     this.id = id;
@@ -34,14 +34,7 @@ function createClass() {//创建新的大类
     if (newCategory.name != "" && newCategory.name != null) {
         newCategory.id = new Date().getTime().toString();
         appendClass(newCategory.name, newCategory.id);
-        var array = []; //本地存储
-        if (localStorage.getItem("Category")) {
-            array = JSON.parse(localStorage.getItem("Category"));//将已经存储数据转化json，并存入array中
-            array.push(newCategory);
-        } else {
-            array.push(newCategory);
-        }
-        localStorage.setItem("Category", JSON.stringify(array));
+        save("Category",null,newCategory);
     }
 }
 function showClass() {//将本地存储的数据显示出来
@@ -49,17 +42,8 @@ function showClass() {//将本地存储的数据显示出来
         var array = JSON.parse(localStorage.getItem("Category"));
         for (var i in array) {
             appendClass(array[i].name, array[i].id);
-            var littleClass = "Class" + array[i].id;
             document.getElementById(array[i].id).onclick = function () {
-                if (localStorage.getItem(littleClass)) {//显示子类
-                    var subClass = JSON.parse(localStorage.getItem(littleClass));//子类存储的key
-                    for (var j in subClass) {
-                        appendSubClass(subClass[j].parent, subClass[j].name, subClass[j].id);
-                    }
-                }
-                document.getElementById(array[i].id).onclick = null;
-            }
-
+            };
         }
     }
 }
@@ -79,6 +63,7 @@ function appendClass(name, id) {//html中显示元素
     newDiv.appendChild(taskName);
     $(".classify")[0].appendChild(newDiv);
 }
+
 function deleteClass(e) {//删除大类
     e = e ? e : window.event;
     var target = e.srcElement ? e.srcElement : e.target;
@@ -126,6 +111,15 @@ function deleteClass(e) {//删除大类
 function clickClass(e) {//点击创建二级分类
     e = e ? e : window.event;
     var target = e.srcElement ? e.srcElement : e.target;
+    if(target.nextSibling==null){//如果子类还没有显示出来
+        var littleClass = "Class" + target.id;
+        if (localStorage.getItem(littleClass)) {//显示子类
+            var subClass = JSON.parse(localStorage.getItem(littleClass));//子类存储的key
+            for (var j in subClass) {
+                appendSubClass(subClass[j].parent, subClass[j].name, subClass[j].id);
+            }
+        }
+    }
     var node;//点击节点的复制
     var taskName = $(".taskName");
     for (var i = 0; i < taskName.length; i++) {
@@ -176,6 +170,9 @@ function addTask(parent) {//添加任务到任务的显示
                 $("#assignmentContent").innerText = taskNode.content;
                 $("#writeTask").style.display = "none";//将填写的内容发布在右侧
                 $("#showTask").style.display = "block";
+                save("Task",parent,taskNode);
+                showTaskProgress(taskNode);
+                appendTask(taskNode);
             }
         }
     };
@@ -201,7 +198,6 @@ function checkTask() {//检查提交的任务是否符合要求
         taskNode.content = $("#taskContent").value
     }
     return taskNode;
-
 }
 function createSubClass(parent, name, id) {//子类元素的赋值和存储
     var subClass = new newSubClass();
@@ -209,18 +205,9 @@ function createSubClass(parent, name, id) {//子类元素的赋值和存储
     subClass.parent = parent.id;
     subClass.id = id;
     appendSubClass(parent.id, name, subClass.id);//显示子类
-    //存储子类
-    var littleClass = "Class" + parent.id;
-    var array = [];
-    var hasSubClass = localStorage.getItem(littleClass);
-    if (hasSubClass) {
-        array = JSON.parse(hasSubClass);
-        array.push(subClass);
-    } else {
-        array.push(subClass);
-    }
-    localStorage.setItem(littleClass, JSON.stringify(array));
+    save("Class",parent,subClass);
 }
+
 function appendSubClass(parentId, name, id) {//显示子类别
     var parent = document.getElementById(parentId).parentNode;
     removeClass(document.getElementById(parentId), "classActive");
@@ -243,3 +230,62 @@ function appendSubClass(parentId, name, id) {//显示子类别
     }
 }
 
+function  save(item,parent,ele ) {//本地存储
+    var saveItem,array=[];
+    if(parent){
+        saveItem = item + parent.id;
+    }else{
+        saveItem=item;
+    }
+    var hasSubClass = localStorage.getItem(saveItem);
+    if (hasSubClass) {
+        array = JSON.parse(hasSubClass);
+        array.push(ele);
+    } else {
+        array.push(ele);
+    }
+    localStorage.setItem(saveItem, JSON.stringify(array));
+}
+function showTaskProgress(node){
+
+}
+function appendTask(node){//填写完任务信息后，将新的任务加到所有任务的列表
+    var taskTitle=$(".taskTitle span");
+    var taskContent=$(".taskContent");
+    for(var i=0;i<taskTitle.length;i++){
+        taskTitle[i].className="";
+        taskContent[i].style.display="none";
+    }
+    taskTitle[0].className="taskTitleActive";
+    taskContent[0].style.display="block";
+    var newDiv=document.createElement("div");
+    var newP1=document.createElement("p");
+    newP1.innerText=node.time;
+    newP1.setAttribute("class","time");
+    var newP2=document.createElement("p");
+    newP2.innerText=node.title;
+    newP2.setAttribute("class","content");
+    addClass(newP2,"taskActive");
+    newDiv.appendChild(newP1);
+    newDiv.appendChild(newP2);
+    taskContent[0].appendChild(newDiv);
+}
+function tab(){
+    var taskTitle=$(".taskTitle span");
+    var taskContent=$(".taskContent");
+    taskTitle[0].setAttribute("class","taskTitleActive");
+    taskContent[0].style.display="block";
+    for(var i=0;i<taskTitle.length;i++){
+        taskTitle[i].index=i;
+        taskTitle[i].onclick=function(){
+//            removeClass(".taskTitle span","taskTitleActive");
+            for(var i=0;i<taskTitle.length;i++){
+                taskContent[i].style.display="none";
+                taskTitle[i].className="";
+            }
+
+            this.className="taskTitleActive";
+            taskContent[this.index].style.display="block";
+        };
+    }
+}

@@ -111,24 +111,54 @@ function hasClass(element, cls) {
 }
 // 为element增加一个样式名为newClassName的新样式
 function addClass(element, newClassName) {
-    if (element.classList) {
-        element.classList.add(newClassName);
-    } else {
-        if (!this.hasClass(element, newClassName))
-            element.className += " " + newClassName;
+    var ele;
+    if(element.substr(0,1)!="#"){
+        ele=$(element);
+        for(var i=0;i<ele.length;i++){
+            if (ele[i].classList) {
+                ele[i].classList.add(newClassName);
+            } else {
+                if (!this.hasClass(ele[i], newClassName))
+                    ele[i].className += " " + newClassName;
+            }
+        }
     }
-
+}
+function addStyle (element,model,newStyleName){
+    var ele;
+    if(element.substr(0,1)!="#"){
+        ele=$(element);
+        for(var i=0;i<ele.length;i++){
+            ele[i].style.model=newStyleName;
+        }
+    }
 }
 // 移除element中的样式oldClassName
 function removeClass(element, oldClassName) {
-    if (element.classList) {
-        element.classList.remove(oldClassName);
-    } else {
-        if (hasClass(element, oldClassName)) {
-            var reg = new RegExp('(\\s|^)' + oldClassName + '(\\s|$)');
-            element.className = element.className.replace(reg, ' ');
+    var ele;
+    if(element.substr(0,1)!="#"){
+        ele=$(element);
+        for(var i=0;i<ele.length;i++){
+            if (ele[i].classList) {
+                ele[i].classList.remove(oldClassName);
+            } else {
+                if (hasClass(ele[i], oldClassName)) {
+                    var reg = new RegExp('(\\s|^)' + oldClassName + '(\\s|$)');
+                    ele[i].className = ele[i].className.replace(reg, ' ');
+                }
+            }
+        }
+    }else{
+        if (element.classList) {
+            element.classList.remove(oldClassName);
+        } else {
+            if (hasClass(element, oldClassName)) {
+                var reg = new RegExp('(\\s|^)' + oldClassName + '(\\s|$)');
+                element.className = element.className.replace(reg, ' ');
+            }
         }
     }
+
 }
 // 判断siblingNode和element是否为同一个父元素下的同一级的元素，返回bool值
 function isSiblingNode(element, siblingNode) {
