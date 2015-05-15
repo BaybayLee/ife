@@ -37,7 +37,7 @@ aside, article{
     width:230px;
     left: 228px;
 }
-.detail{
+.detail, #writeTask{
     left:458px;
     right: 0;
 }
@@ -116,7 +116,7 @@ aside, article{
     border-bottom: 1px solid #cdcdcd;
 }
 .taskTitle span{
-    margin: 7px;
+    margin: 4px;
     padding: 8px;
     display: inline-block;
 }
@@ -131,9 +131,13 @@ aside, article{
 }
 .taskFinish .content{
     line-height: 20px;
-    padding: 5px 0;
+    padding: 2px 0 0 40px;
+    text-overflow: ellipsis;
+    word-break: break-all;
     cursor: pointer;
-    width: 100%;
+    width: 69%;
+    overflow: hidden;
+    height: 20px;
 }
 .content span{
     padding-left: 40px;
@@ -143,10 +147,11 @@ aside, article{
     color: green;
     background:#f2f2f2;
 }
-.detail{
+.detail, #writeTask{
     min-width: 600px;
 }
-.detail .detailTitle{
+ .detailTitle{
+     border-bottom: 1px solid #cdcdcd;
     background:#f2f2f2 ;
     height: 50px;
     font-size: 20px;
@@ -161,18 +166,35 @@ aside, article{
     margin-right: 30px;
     margin-top:10px ;
 }
-/*.detailTitle .finished{*/
-    /*left: 400px;*/
-/*}*/
-/*.detailTitle .edit{*/
-    /*left: 450px;*/
-/*}*/
 .detail .time{
     height:60px;
     background:#fafaee;
     line-height: 60px;
     padding-left: 30px;
 
+}
+#writeTask{
+    display: none;
+}
+#writeTask input, #writeTask textarea{
+    background:#fcfcfc;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05)inset;
+    color: #777;
+    font-size: 16px;
+    display: inline-block;
+    line-height: 26px;
+    padding: 0 10px;
+    width: 280px;
+}
+#writeTask textarea{
+    margin-top: 30px;
+    margin-left: 20px;
+    height: 500px;
+    width: 80%;
+    line-height: 30px;
+   text-indent: 2em;
 }
 .taskDetail{
     border-top: 1px solid #cdcdcd;
@@ -181,4 +203,19 @@ aside, article{
 }
 .classActive{
     background: #fafaee;
+}
+ #writeTask #submitTask{
+     display: block;
+     cursor: pointer;
+     font-weight: bold;
+     margin: 30px 100px;
+     border: none;
+     background: #d1d1d1;
+     width: 100px;
+     height: 32px;
+     line-height: 20px;
+     border-radius: 7px;
+}
+#writeTask #submitTask:hover{
+    background: #ACACAC;
 }
