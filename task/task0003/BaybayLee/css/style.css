@@ -29,7 +29,7 @@ aside, article{
     overflow-x: hidden;
 }
 .classify{
-    width: 217px;
+    width: 227px;
     background:#f2f2f2;
     padding-top: 25px; ;
 }
@@ -43,7 +43,7 @@ aside, article{
 }
 .classify h4 {
     padding-left: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 .sumList{
     margin-bottom: 10px;
@@ -55,7 +55,7 @@ aside, article{
     height: 12px;
     right: 22px;
     position: absolute;
-    top: 7px;
+    top: 5px;
     display: none;
 }
 .taskName.taskName:hover .deleteTask, .subTask li:hover .deleteTask{
@@ -63,23 +63,21 @@ aside, article{
 }
 .taskName{
     position: relative;
-    line-height: 30px;
+    line-height: 20px;
 	padding-left:30px;
 }
 .taskName i{
     display: inline-block;
     position: absolute;
     left: 10px;
-    top: 10px;
+    top: 3px;
     width: 18px;
     height: 12px;
     background: url("../img/folderIcon.png")no-repeat left center;
 }
 .subTask li{
     position: relative;
-}
-.subTask li {
-	line-height:25px;
+	line-height:17px;
 	list-style:none;
 	padding-left:40px;
 	margin-top:3px;
@@ -87,7 +85,7 @@ aside, article{
 .subTask i{
     display: inline-block;
     width: 12px;
-    height: 24px;
+    height: 18px;
     background:url(../img/textIcon.png) no-repeat left center;
     position: absolute;
     left: 25px;
