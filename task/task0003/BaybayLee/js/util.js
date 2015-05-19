@@ -111,17 +111,11 @@ function hasClass(element, cls) {
 }
 // 为element增加一个样式名为newClassName的新样式
 function addClass(element, newClassName) {
-    var ele;
-    if(element.substr(0,1)!="#"){
-        ele=$(element);
-        for(var i=0;i<ele.length;i++){
-            if (ele[i].classList) {
-                ele[i].classList.add(newClassName);
-            } else {
-                if (!this.hasClass(ele[i], newClassName))
-                    ele[i].className += " " + newClassName;
-            }
-        }
+    if (element.classList) {
+        element.classList.add(newClassName);
+    } else {
+        if (!this.hasClass(element, newClassName))
+            element.className += " " + newClassName;
     }
 }
 function addStyle (element,model,newStyleName){
@@ -131,13 +125,14 @@ function addStyle (element,model,newStyleName){
         for(var i=0;i<ele.length;i++){
             ele[i].style.model=newStyleName;
         }
+    }else{
+        $(element).style.model=newStyleName;
     }
 }
 // 移除element中的样式oldClassName
 function removeClass(element, oldClassName) {
-    var ele;
+    var ele=$(element);
     if(element.substr(0,1)!="#"){
-        ele=$(element);
         for(var i=0;i<ele.length;i++){
             if (ele[i].classList) {
                 ele[i].classList.remove(oldClassName);
@@ -149,12 +144,12 @@ function removeClass(element, oldClassName) {
             }
         }
     }else{
-        if (element.classList) {
-            element.classList.remove(oldClassName);
+        if (ele.classList) {
+            ele.classList.remove(oldClassName);
         } else {
-            if (hasClass(element, oldClassName)) {
+            if (hasClass(ele, oldClassName)) {
                 var reg = new RegExp('(\\s|^)' + oldClassName + '(\\s|$)');
-                element.className = element.className.replace(reg, ' ');
+                ele.className = ele.className.replace(reg, ' ');
             }
         }
     }

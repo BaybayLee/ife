@@ -5,9 +5,8 @@
     <title>任务管理系统</title>
     <link rel="stylesheet" href="css/reset.css"/>
     <link rel="stylesheet" href="css/style.css"/>
-    <!--<script src="js/yanli_util.js"></script>-->
+    <script src="js/util.js"></script>
     <script src="js/yan_task03.js"></script>
-    <script src="js/yanli_util.js"></script>
 </head>
 <body>
 <header>
@@ -17,64 +16,43 @@
     <aside class="classify" id="classContainer">
         <h4>所有任务 (<span>11</span>) </h4>
         <h4>分类列表</h4>
-        <div class="sumList" id="defaultClass">
-			<p class="taskName">
-                默认分类<i></i>
+        <div class="sumList" >
+			<p class="taskName" id="defaultClass">
+                默认分类 <i></i>
 			</p>
         </div>
         <div class="increaseBtn" id="createClassification"><span class="increaseSym">+</span>新增分类</div>
     </aside>
-    <aside class="task">
+    <aside id="task">
        <nav class="taskTitle">
            <span id="all">所有</span>
            <span id="done">已完成</span>
            <span id="noneDoing">未完成</span>
        </nav>
         <div id="allTask" class="taskContent">
-            <div>
-                <p class="time">2015-05-10</p>
-                <p class="content">所有</p>
-            </div>
-            <div>
-                <p class="time">2015-05-10</p>
-                <p class="content">to-do1dd d , dddd d  d d d d d d d  df af</p>
-            </div>
         </div>
         <div id="taskFinished"class="taskContent">
-            <div>
-                <p class="time">2015-05-10</p>
-                <p class="content">已完成</p>
-            </div>
-            <div>
-                <p class="time">2015-05-10</p>
-                <p class="content">to-do1dd d , dddd d  d d d d d d d  df af</p>
-            </div>
         </div>
         <div id="taskUndo" class="taskContent">
-            <div>
-                <p class="time">2015-05-10</p>
-                <p class="content">未完成</p>
-            </div>
-            <div>
-                <p class="time">2015-05-10</p>
-                <p class="content">to-do1dd d , dddd d  d d d d d d d  df af</p>
-            </div>
         </div>
         <div class="increaseBtn" id="addTask"><span class="increaseSym">+</span>新增任务</div>
     </aside>
     <article class="detail" id="showTask">
-        <nav class="detailTitle">
+        <nav class="detailTitle" id="showTitle">
             <span id="assignmentTitle">to-do5</span>
-            <img src="img/finishIcon.png" alt="完成" class="finished"/>
-            <img src="img/editIcon.png" alt="编辑" class="edit" />
+            <img src="img/finishIcon.png" alt="完成" class="finished" id="taskCompletion" title="任务完成"/>
+            <img src="img/editIcon.png" alt="编辑" class="edit" id="taskEdit" title="任务修改" />
         </nav>
         <p class="time" >任务日期: <span id="assignmentTime">2015-10-09</span></p>
         <div class="taskDetail" id="assignmentContent">赶工干了好几天，连续熬了三天的夜，平均每天睡眠5小时不到，也算是有了个交代。能做出来非常开心，</div>
     </article>
     <article id="writeTask">
-       <div class="detailTitle"><input type="text" placeholder="请输入任务的名称" id="taskName"/></div>
-       <div class="detailTitle"><input type="text" placeholder="请输入XXXX-XX-XX形式的时间" id="taskTime"/></div>
-       <textarea name="" placeholder="请输入任务的具体内容" id="taskContent"></textarea>
+       <div class="detailTitle"><input type="text" placeholder="请输入任务的名称" id="taskName"/><span>(任务的名称)</span></div>
+       <div class="detailTitle"><input type="text" placeholder="请输入XXXX-XX-XX形式的时间" id="taskTime"/><span>(任务时间)</span></div>
+       <div class="areaTask">
+           <p>请输入任务的具体内容</p>
+           <textarea name="" placeholder="请输入任务的具体内容" id="taskContent"></textarea>
+       </div>
         <input type="submit" value="确定" id="submitTask"/>
     </article>
 </main>

@@ -33,7 +33,7 @@ aside, article{
     background:#f2f2f2;
     padding-top: 25px; ;
 }
-.task{
+#task{
     width:230px;
     left: 228px;
 }
@@ -43,7 +43,7 @@ aside, article{
 }
 .classify h4 {
     padding-left: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 .sumList{
     margin-bottom: 10px;
@@ -55,43 +55,45 @@ aside, article{
     height: 12px;
     right: 22px;
     position: absolute;
-    top: 5px;
+    top: 12px;
     display: none;
+}
+.subTask li .deleteTask{
+    top: 7px;
 }
 .taskName.taskName:hover .deleteTask, .subTask li:hover .deleteTask{
     display: inline-block;
 }
 .taskName{
     position: relative;
-    line-height: 20px;
+    line-height: 30px;
 	padding-left:30px;
 }
 .taskName i{
     display: inline-block;
     position: absolute;
     left: 10px;
-    top: 3px;
+    top: 10px;
     width: 18px;
     height: 12px;
     background: url("../img/folderIcon.png")no-repeat left center;
 }
 .subTask li{
     position: relative;
-	line-height:17px;
+	line-height:24px;
 	list-style:none;
-	padding-left:40px;
-	margin-top:3px;
+	padding-left:40px;;
 }
 .subTask i{
     display: inline-block;
     width: 12px;
-    height: 18px;
+    height: 25px;
     background:url(../img/textIcon.png) no-repeat left center;
     position: absolute;
     left: 25px;
 }
 
-.subTask li:hover{
+.subTask li:hover,.subTask .liActive{
     background: #fafaee;
 }
 .increaseBtn{
@@ -127,6 +129,8 @@ aside, article{
 }
 #allTask .time, #taskFinished .time, #taskUndo .time {
     padding: 10px 15px;
+    background:#fafaee ;
+    line-height: 12px;
 }
 #allTask .content ,#taskFinished .content,#taskUndo .content {
     line-height: 20px;
@@ -141,19 +145,23 @@ aside, article{
 #taskFinished,#taskUndo{
     display: none;
 }
-.task .none{
-    display: none;
-}
 .content span{
     padding-left: 40px;
 }
 
-#allTask .content:hover, #taskFinished .content:hover ,#taskUndo .content:hover,.taskActive{
+#allTask .content:hover, #taskFinished .content:hover ,#taskUndo .content:hover{
     color: green;
     background:#f2f2f2;
 }
+.taskActive{
+    color: green;
+}
 .detail, #writeTask{
     min-width: 600px;
+}
+#writeTask  .detailTitle span{
+    font-size:12px;
+    padding-left: 10px;
 }
  .detailTitle{
      border-bottom: 1px solid #cdcdcd;
@@ -176,12 +184,11 @@ aside, article{
     background:#fafaee;
     line-height: 60px;
     padding-left: 30px;
-
 }
 #writeTask{
     display: none;
 }
-#writeTask input, #writeTask textarea{
+#writeTask input, #writeTask textarea {
     background:#fcfcfc;
     border: 1px solid #ccc;
     border-radius: 3px;
@@ -193,21 +200,29 @@ aside, article{
     padding: 0 10px;
     width: 280px;
 }
-#writeTask textarea{
+#writeTask .areaTask{
     margin-top: 30px;
     margin-left: 20px;
-    height: 500px;
     width: 80%;
+}
+.areaTask p{
+    text-align: center;
+    margin: 10px;
+}
+#writeTask .areaTask textarea{
+    width: 100%;
+    min-height: 300px;
     line-height: 30px;
-   text-indent: 2em;
+    text-indent: 2em;
+
 }
 .taskDetail{
     border-top: 1px solid #cdcdcd;
-    padding: 30px;
+    padding: 10px 30px;
     line-height: 20px;
 }
 .classActive{
-    background: #fafaee;
+    background: #FFFEFE;
 }
  #writeTask #submitTask{
      display: block;
