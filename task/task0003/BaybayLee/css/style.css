@@ -239,3 +239,13 @@ aside, article{
 #writeTask #submitTask:hover{
     background: #ACACAC;
 }
+#mask{
+    position: absolute;
+    width: 457px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid red;
+    z-index:33333 ;
+    display: none;
+}

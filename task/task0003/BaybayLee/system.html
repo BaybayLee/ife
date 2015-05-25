@@ -14,8 +14,8 @@
 </header>
 <main>
     <aside class="classify" id="classContainer">
-        <h4>所有任务 (<span>11</span>) </h4>
-        <h4>分类列表</h4>
+        <h4 id="allTsk">所有任务 (<span id="taskNum">11</span>) </h4>
+        <h4 id="classList">分类列表</h4>
         <div class="sumList" >
 			<p class="taskName" id="defaultClass">
                 默认分类 <i></i>
@@ -37,14 +37,17 @@
         </div>
         <div class="increaseBtn" id="addTask"><span class="increaseSym">+</span>新增任务</div>
     </aside>
+    <div id="mask">
+
+    </div>
     <article class="detail" id="showTask">
         <nav class="detailTitle" id="showTitle">
             <span id="assignmentTitle">to-do5</span>
             <img src="img/finishIcon.png" alt="完成" class="finished" id="taskCompletion" title="任务完成"/>
             <img src="img/editIcon.png" alt="编辑" class="edit" id="taskEdit" title="任务修改" />
         </nav>
-        <p class="time" >任务日期: <span id="assignmentTime">2015-10-09</span></p>
-        <div class="taskDetail" id="assignmentContent">赶工干了好几天，连续熬了三天的夜，平均每天睡眠5小时不到，也算是有了个交代。能做出来非常开心，</div>
+        <p class="time" >任务日期: <span id="assignmentTime">2015-05-20</span></p>
+        <div class="taskDetail" id="assignmentContent">感谢各位老师的review，还有很多待完善的完善，任务四重构的时候，希望可以做的更好</div>
     </article>
     <article id="writeTask">
        <div class="detailTitle"><input type="text" placeholder="请输入任务的名称" id="taskName"/><span>(任务的名称)</span></div>

@@ -7,12 +7,13 @@ window.onload = function () {
     $("#createClassification").onclick = createClass;
     delegateEvent("#classContainer", "img", "click", deleteClass);
     delegateEvent("#classContainer", "p", "click", clickClass);
-    //showTask();
+    $("#classList").onclick = $("#allTsk").onclick = $("#defaultClass").onclick = removeAllClass;
+    showTaskNum();
     tab();
     delegateEvent("#classContainer", "li", "click", clickSubClass);
     delegateEvent("#task", "p", "click", taskDetail);
-    addClickEvent($("#taskEdit"),editTask);
-    addClickEvent($("#taskCompletion"),finishTask);
+    addClickEvent($("#taskEdit"), editTask);
+    addClickEvent($("#taskCompletion"), finishTask);
 };
 function newClass(id, name) {//每个大的类别都有ID号，name也就是存储的名字，以及子类别
     this.id = id;
@@ -37,7 +38,7 @@ function createClass() {//创建新的大类
     newCategory.name = prompt("分类名字：");//创建的名字
     if (newCategory.name != "" && newCategory.name != null) {
         newCategory.id = new Date().getTime().toString();
-        appendClass(newCategory.name, newCategory.id);
+        appendClass(newCategory.name, newCategory.id,true);//tag用于区分是创建新类还是页面重新打开，若创建则为true
         save("Category", "", newCategory);
     }
 }
@@ -45,30 +46,59 @@ function showClass() {//将本地存储的数据显示出来
     if (localStorage.getItem("Category")) {
         var array = JSON.parse(localStorage.getItem("Category"));
         for (var i in array) {
-            appendClass(array[i].name, array[i].id);
+            appendClass(array[i].name, array[i].id,false);
         }
     }
 }
-function appendClass(name, id) {//html中显示元素
+function removeAllClass() {
+    removeClass(".taskName", "classActive");
+    removeClass(".subTask li", "liActive");
+}
+function appendClass(name, id,tag) {//html中显示元素
     var newImg = document.createElement("img");
     newImg.setAttribute("class", "deleteTask");
     newImg.setAttribute("src", "img/delete.png");
     var newIcon = document.createElement("i");
     var taskName = document.createElement("p");
     taskName.setAttribute("class", "taskName");
+    taskName.setAttribute("task-num", "0");
     taskName.id = id;
     taskName.innerText = name;
     taskName.appendChild(newIcon);
     taskName.appendChild(newImg);
+    if(tag){
+        taskName.innerHTML+="(0)";
+    }
     var newDiv = document.createElement("div");
     newDiv.setAttribute("class", "sumList");
     newDiv.appendChild(taskName);
     $(".classify")[0].appendChild(newDiv);
 }
-
+function showTaskNum() {
+    var Category = JSON.parse(localStorage.getItem("Category"));
+    var totalTsk = 0;
+    if (Category) {
+        for (var i in Category) {
+            var subCategory = JSON.parse(localStorage.getItem("Class" + Category[i].id));//获取到大的分类
+            var tskNum = 0;
+            if (subCategory) {//如果存在子分类，检查任务的情况
+                for (var j in subCategory) {
+                    var subTsk = JSON.parse(localStorage.getItem("Task" + subCategory[j].id));
+                    if (subTsk) {
+                        tskNum += subTsk.length;
+                    }
+                }
+            }
+            $("#" + Category[i].id).innerHTML += " ( " + tskNum + " ) ";
+            $("#" + Category[i].id).setAttribute("task-num", tskNum);
+            totalTsk += tskNum;//总的任务数目
+        }
+    }
+    $("#taskNum").innerHTML = totalTsk;
+}
 function deleteClass(e) {//删除大类
-    e=e?e:window.event;
-    var target= e.srcElement? e.srcElement: e.target;
+    e = e ? e : window.event;
+    var target = e.srcElement ? e.srcElement : e.target;
     var clsArray, subClsArray, sure;
     clsArray = JSON.parse(localStorage.getItem("Category"));
     if (target.parentNode.tagName.toLocaleLowerCase() == "p") {//删除的是大类
@@ -82,23 +112,26 @@ function deleteClass(e) {//删除大类
         sure = confirm("您将要删除整个" + node.name + "类别以及其子类别，确认要删除么？");
         if (sure) {//确认删除
             if (localStorage.getItem("Class" + node.id)) {//删除存储的整个子类
-                var subClass=JSON.parse(localStorage.getItem("Class" + node.id));
-                for(var i in subClass){//删除每个子类中的任务
-                    if(localStorage.getItem("Task"+subClass[i].id)){
-                        localStorage.removeItem("Task"+subClass[i].id);
+                var subClass = JSON.parse(localStorage.getItem("Class" + node.id));
+                for (var i in subClass) {//删除每个子类中的任务
+                    if (localStorage.getItem("Task" + subClass[i].id)) {
+                        localStorage.removeItem("Task" + subClass[i].id);
                     }
                 }
                 localStorage.removeItem("Class" + node.id);//删除每个类别
+                $("#taskNum").innerHTML=parseInt($('#taskNum').innerText) - parseInt(target.parentNode.getAttribute("task-num"));
             }
             clsArray.splice(location, 1);//删除存储的大类
             localStorage.setItem("Category", JSON.stringify(clsArray));
             document.getElementById(node.id).parentNode.innerHTML = "";
-            $("#allTask").innerHTML="";
-            $("#taskFinished").innerHTML="";
-            $("#taskUndo").innerHTML="";
+            $("#allTask").innerHTML = "";
+            $("#taskFinished").innerHTML = "";
+            $("#taskUndo").innerHTML = "";
         }
     } else {//删除的是子类
-        var subCataloge = "Class" + target.parentNode.parentNode.previousElementSibling.id;
+        var subTarget = target.parentNode.parentNode.previousElementSibling;//大类
+        var parentNode = $("#" + subTarget.id);
+        var subCataloge = "Class" + subTarget.id;
         subClsArray = JSON.parse(localStorage.getItem(subCataloge));
         for (var j in subClsArray) {
             if (subClsArray[j].id == target.parentNode.id) {
@@ -107,11 +140,19 @@ function deleteClass(e) {//删除大类
                 break;
             }
         }
+        var targetId = target.parentNode.id;
         sure = confirm("您将要删除" + node.name + "么？");
+        var subNum;
         if (sure) {
-            if(localStorage.getItem("Task"+target.parentNode.id)){
-                localStorage.removeItem("Task"+target.parentNode.id);
+            if (localStorage.getItem("Task" + targetId)) {
+                subNum = JSON.parse(localStorage.getItem("Task" + targetId)).length;
+                localStorage.removeItem("Task" + targetId);
             }
+            var taskNum = parentNode.getAttribute("task-num");
+            var nowTsk = taskNum - subNum;
+            parentNode.setAttribute("task-num", nowTsk);
+            parentNode.removeChild(parentNode.lastChild);
+            parentNode.innerHTML += "(" + nowTsk + ")";//修改大类的任务数目
             subClsArray.splice(location, 1);
             if (subClsArray.length == 0) {
                 localStorage.removeItem(subCataloge);
@@ -120,21 +161,29 @@ function deleteClass(e) {//删除大类
                 localStorage.setItem(subCataloge, JSON.stringify(subClsArray));
             }
             document.getElementById(node.id).innerHTML = "";
-            $("#allTask").innerHTML="";
-            $("#taskFinished").innerHTML="";
-            $("#taskUndo").innerHTML="";
+            $("#allTask").innerHTML = "";
+            $("#taskFinished").innerHTML = "";
+            $("#taskUndo").innerHTML = "";
+            $("#taskNum").innerHTML = parseInt($('#taskNum').innerText) - subNum;
         }
     }
 }
-function clickClass(e) {//点击创建二级分类
-    e=e?e:window.event;
-    var target= e.srcElement? e.srcElement: e.target;
+function clickClass(e) {//显示二级分类
+    e = e ? e : window.event;
+    var target = e.srcElement ? e.srcElement : e.target;
     if (target.nextSibling == null) {//如果子类还没有显示出来
         var littleClass = "Class" + target.id;
         if (localStorage.getItem(littleClass)) {//显示子类
             var subClass = JSON.parse(localStorage.getItem(littleClass));//子类存储的key
             for (var j in subClass) {
-                appendSubClass(subClass[j].parent, subClass[j].name, subClass[j].id);
+                appendSubClass(subClass[j].parent, subClass[j].name, subClass[j].id,false);
+                var tskNum = 0;
+                var task = JSON.parse(localStorage.getItem('Task' + subClass[j].id));
+                if (task) {
+                    tskNum = task.length;
+                }
+                $("#" + subClass[j].id).innerHTML += "(" + tskNum + ")";
+                $("#" + subClass[j].id).setAttribute("task-num", tskNum);
             }
         }
     }
@@ -144,7 +193,7 @@ function clickClass(e) {//点击创建二级分类
         removeClass(".subTask li", "liActive");
     }
     addClass(target, "classActive");
-    node=findStorageChild("Category",target.id);
+    node = findStorageChild("Category", target.id);
     $("#createClassification").onclick = function () {
         if (node == undefined) {
             alert("不能给默认分类添加子类")
@@ -156,18 +205,18 @@ function clickClass(e) {//点击创建二级分类
                 createSubClass(node, name, subID);//创建子分类
             }
         }
-        $("#createClassification").onclick = createClass;//新增分类的按钮点击时间重新为添加大的分类
+        $("#createClassification").onclick = createClass;//新增分类的按钮点击事件重新为添加大的分类
     };
     $("#addTask").onclick = function () {
         alert("请在右侧选择一个子分类");
     };
 }
 function clickSubClass(e) {//点击子分类的操作
-    e=e?e:window.event;
-    var target= e.srcElement? e.srcElement: e.target;
+    e = e ? e : window.event;
+    var target = e.srcElement ? e.srcElement : e.target;
     removeClass(".subTask li", "liActive");
-    removeClass("#defaultClass","classActive");
-    removeClass(".taskName","classActive");
+    removeClass("#defaultClass", "classActive");
+    removeClass(".taskName", "classActive");
     addClass(target, "liActive");
     taskList(target);
     $("#addTask").onclick = function () {
@@ -199,82 +248,99 @@ function addTask(parent) {//添加任务到任务的显示
     taskNode.id = new Date().getTime();
     taskNode.parent = parent.id;
     taskNode.status = 0;//没有完成
-     writeTask(taskNode,parent.id,true);
+    writeTask(taskNode, parent.id, true);
 }
-function writeTask(node,parentID ,tag){//node为任务节点，tag为了区分是更新任务列表还是创建任务列表；填写任务信息
+function writeTask(node, parentID, tag) {//node为任务节点，tag为了区分是更新任务列表还是创建任务列表；填写任务信息
     $("#showTask").style.display = "none";
     $("#writeTask").style.display = "block";
     var sure1;
-    $("#classContainer").onclick=$("#all").onclick=$("#done").onclick=$("#noneDoing").onclick=$("#allTask").onclick=
-        function(){
-             sure1=confirm("请问要放弃当前编辑的任务么？");
-            if(sure1){
-                $("#showTask").style.display = "block";
-                $("#writeTask").style.display = "none";
-                $("#taskName").value="";
-                $("#taskTime").value="";
-                $("#taskContent").value="";
-            }
+    $("#mask").style.display="block";
+    $("#mask").onclick = function () {
+        sure1 = confirm("请问要放弃当前编辑的任务么？");
+        if (sure1) {
+            $("#mask").style.display="none";
+            $("#showTask").style.display = "block";
+            $("#writeTask").style.display = "none";
+            $("#taskName").value = "";
+            $("#taskTime").value = "";
+            $("#taskContent").value = "";
+        }
     };
-
-        $("#submitTask").onclick = function () {
-            var sure = confirm("确定提交任务么？");
-            if (sure) {
-                var retTask = checkTask();
-                if (retTask) {//如果填写正确的话，将保存
-                    node.title = retTask.name;
-                    node.time = retTask.time;
-                    node.content = retTask.content;
-                    $("#assignmentTitle").innerText = node.title;
-                    $("#showTitle").setAttribute("data-parent",parentID);
-                    $("#showTitle").setAttribute("Task-ID",node.id);
-                    $("#assignmentTime").innerText = node.time;
-                    $("#assignmentContent").innerText = node.content;
-                    $("#writeTask").style.display = "none";//将填写的内容发布在右侧
-                    $("#showTask").style.display = "block";
-                    if(tag){//存储任务
-                        save("Task", parentID, node);//存储任务
-                        appendTask(node, parentID, 2);//每次添加任务之后，都将添加所有任务和为完成的任务列表中，并且先添加未完成，在添加所有
-                        appendTask(node,parentID, 0);
-                    }else{//更新存储和显示的taskList
-                        refreshList(node,parentID);
-                    }
-                    $("#taskName").value = "";
-                    $("#taskTime").value = "";
-                    $("#taskContent").value = "";
+    $("#submitTask").onclick = function () {
+        var sure = confirm("确定提交任务么？");
+        if (sure) {
+            $("#mask").style.display="none";
+            var retTask = checkTask();
+            if (retTask) {//如果填写正确的话，将保存
+                node.title = retTask.name;
+                node.time = retTask.time;
+                node.content = retTask.content;
+                $("#assignmentTitle").innerText = node.title;
+                $("#showTitle").setAttribute("data-parent", parentID);
+                $("#showTitle").setAttribute("Task-ID", node.id);
+                $("#assignmentTime").innerText = node.time;
+                $("#assignmentContent").innerText = node.content;
+                $("#writeTask").style.display = "none";//将填写的内容发布在右侧
+                $("#showTask").style.display = "block";
+                if (tag) {//存储任务
+                    save("Task", parentID, node);//存储任务
+                    appendTask(node, parentID, 2);//每次添加任务之后，都将添加所有任务和为完成的任务列表中，并且先添加未完成，在添加所有
+                    appendTask(node, parentID, 0);
+                    var subTskNum = parseInt($("#" + parentID).getAttribute("task-num")) + 1;
+                    $("#" + parentID).setAttribute("task-num", subTskNum);
+                    $("#" + parentID).removeChild($("#" + parentID).lastChild);
+                    $("#" + parentID).innerHTML += "(" + subTskNum + ")";
+                    var parent = $("#" + parentID).parentNode.previousSibling;
+                    var totoalTsk = parseInt(parent.getAttribute("task-num")) + 1;
+                    parent.removeChild(parent.lastChild);
+                    parent.innerHTML += "(" + totoalTsk + ")";
+                    parent.setAttribute("task-num", totoalTsk);
+                    $("#taskNum").innerHTML = parseInt($('#taskNum').innerText) + 1;
+                } else {//更新存储和显示的taskList
+                    refreshList(node, parentID);
                 }
+                $("#taskName").value = "";
+                $("#taskTime").value = "";
+                $("#taskContent").value = "";
             }
-        };
+        }
+    };
 }
-function refreshList(node,parentID){
-    var replaceList=$("[My-task="+node.id+"]");
-    for(var i=0;i<replaceList.length;i++){
-        replaceList[i].innerText=node.title;
-        replaceList[i].previousSibling.innerText=node.time;
+function refreshList(node, parentID) {
+    var replaceList = $("[My-task=" + node.id + "]");
+    for (var i = 0; i < replaceList.length; i++) {
+        replaceList[i].innerText = node.title;
+        replaceList[i].previousSibling.innerText = node.time;
     }
-    var array=JSON.parse(localStorage.getItem("Task"+parentID));
-    for(var i in array){
-        if(array[i].id==node.id){
-            array[i].time=node.time;
-            array[i].title=node.title;
-            array[i].content=node.content;
+    var array = JSON.parse(localStorage.getItem("Task" + parentID));
+    for (var i in array) {
+        if (array[i].id == node.id) {
+            array[i].time = node.time;
+            array[i].title = node.title;
+            array[i].content = node.content;
         }
     }
-    localStorage.setItem("Task"+parentID,JSON.stringify(array));
+    localStorage.setItem("Task" + parentID, JSON.stringify(array));
 }
 
-function editTask(e){//修改任务的内容
-    e=e?e:window.event;
-    var target= e.srcElement? e.srcElement: e.target;
-    var parent=target.parentNode;//subTitle;
-    if(parent.getAttribute("data-parent")){
-        var taskItem="Task"+parent.getAttribute("data-parent");
-        var node=findStorageChild(taskItem,parent.getAttribute("Task-ID"));//找到localStorage中存储的节点
-        $("#taskName").value = node.title;
-        $("#taskTime").value = node.time;
-        $("#taskContent").value = node.content;
-        writeTask(node,parent.getAttribute("data-parent"),false);
-    }else{
+function editTask(e) {//修改任务的内容
+    e = e ? e : window.event;
+    var target = e.srcElement ? e.srcElement : e.target;
+    var parent = target.parentNode;//subTitle;
+    if (parent.getAttribute("data-parent")) {
+        var taskItem = "Task" + parent.getAttribute("data-parent");
+        var node = findStorageChild(taskItem, parent.getAttribute("Task-ID"));//找到localStorage中存储的节点
+        if(node.status==0)//表示尚未完成
+        {
+            $("#taskName").value = node.title;
+            $("#taskTime").value = node.time;
+            $("#taskContent").value = node.content;
+            writeTask(node, parent.getAttribute("data-parent"), false);
+        }else{
+            alert("任务已经完成，不能再进行编辑！");
+        }
+    }
+    else {
         alert("不能编辑");
     }
 }
@@ -284,23 +350,27 @@ function finishTask(e) {
     var parent = target.parentNode;//subTitle;
     if (parent.getAttribute("data-parent")) {
         var taskItem = "Task" + parent.getAttribute("data-parent");
-        var sure = confirm("确认您的任务" + $("#assignmentTitle").innerText + "已经完成");
-        if (sure) {
-            var array =JSON.parse( localStorage.getItem(taskItem));//找到localStorage中存储的节点
-            for (var i in array) {
-                if (array[i].id == parent.getAttribute("Task-ID")) {//找到节点
-                    array[i].status = 1;//表示完成
-                    localStorage.setItem(taskItem, JSON.stringify(array));
+        var array = JSON.parse(localStorage.getItem(taskItem));//找到localStorage中存储的节点
+        for (var i in array) {
+            if (array[i].id == parent.getAttribute("Task-ID")) {//找到节点
+                if(array[i].status==1){
+                    alert("该任务已经完成！");
+                }else{
+                    var sure = confirm("确认您的任务" + $("#assignmentTitle").innerText + "已经完成");
+                    if (sure) {
+                        array[i].status = 1;//表示完成
+                        localStorage.setItem(taskItem, JSON.stringify(array));
+                    }
                     break;
                 }
             }
-            var replaceList=$("[My-task="+parent.getAttribute("Task-ID")+"]");
-            var divTask=replaceList[1].parentNode;
-            var divContainer=divTask.parentNode;
+            var replaceList = $("[My-task=" + parent.getAttribute("Task-ID") + "]");
+            var divTask = replaceList[1].parentNode;
+            var divContainer = divTask.parentNode;
             divContainer.removeChild(divTask);//从未完成中删除；
             $("#taskFinished").appendChild(divTask);
         }
-    }else {
+    } else {
         alert("不能编辑");
     }
 }
@@ -332,37 +402,41 @@ function createSubClass(parent, name, id) {//子类元素的赋值和存储
     subClass.name = name;
     subClass.parent = parent.id;
     subClass.id = id;
-    appendSubClass(parent.id, name, subClass.id);//显示子类
+    appendSubClass(parent.id, name, subClass.id,true);//显示子类
     save("Class", parent.id, subClass);
 }
 
 function taskDetail(e) {//点击任务名字，显示具体的任务信息
-    e=e?e:window.event;
-    var target= e.srcElement? e.srcElement: e.target;
-    removeClass(".content","taskActive");
+    e = e ? e : window.event;
+    var target = e.srcElement ? e.srcElement : e.target;
+    removeClass(".content", "taskActive");
     addClass(target, "taskActive");
-    var parentId=target.getAttribute("data-parent");
+    var parentId = target.getAttribute("data-parent");
     var taskItem = "Task" + parentId;
     var node = findStorageChild(taskItem, target.id);
     $("#assignmentTitle").innerText = node.title;
-    $("#showTitle").setAttribute("data-parent",parentId);
-    $("#showTitle").setAttribute("Task-ID",target.id);
+    $("#showTitle").setAttribute("data-parent", parentId);
+    $("#showTitle").setAttribute("Task-ID", target.id);
     $("#assignmentTime").innerText = node.time;
     $("#assignmentContent").innerText = node.content;
 }
 
-function appendSubClass(parentId, name, id) {//显示子类别
+function appendSubClass(parentId, name, id,tag) {//显示子类别
     var parent = document.getElementById(parentId).parentNode;
     removeClass(parentId, "classActive");
     var newLi = document.createElement("li");
     newLi.id = id;
     newLi.innerText = name;
+    newLi.setAttribute("task-num", "0");
     var newIcon = document.createElement("i");
     var newImg = document.createElement("img");
     newImg.setAttribute("src", "img/delete.png");
     newImg.setAttribute("class", "deleteTask");
     newLi.appendChild(newIcon);
     newLi.appendChild(newImg);
+    if(tag){
+        newLi.innerHTML+="(0)";
+    }
     if (document.getElementById(parentId).nextSibling != null) {//如果ul已经存在，则直接插入
         document.getElementById(parentId).nextSibling.appendChild(newLi);
     } else {//否则先创建ul，在加入
@@ -406,7 +480,7 @@ function appendTask(node, parentId, index) {//填写完任务信息后，将新�
     var newP = document.createElement("p");
     newP.innerText = node.title;
     newP.setAttribute("data-parent", parentId);
-    newP.setAttribute("My-task",node.id);
+    newP.setAttribute("My-task", node.id);
     newP.setAttribute("class", "content");
     newP.id = node.id;
     removeClass(".content", "taskActive");
